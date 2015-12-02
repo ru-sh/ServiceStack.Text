@@ -1699,20 +1699,20 @@ namespace ServiceStack
         }
 
 #if (NETFX_CORE)
-        public static object GetDefaultValue(this Type type)
-        {
-            return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
-        }
+        //public static object GetDefaultValue(this Type type)
+        //{
+        //    return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
+        //}
 
         public static PropertyInfo GetProperty(this Type type, String propertyName)
         {
             return type.GetTypeInfo().GetDeclaredProperty(propertyName);
         }
 
-        public static MethodInfo GetMethod(this Type type, String methodName)
-        {
-            return type.GetTypeInfo().GetDeclaredMethod(methodName);
-        }
+        //public static MethodInfo GetMethod(this Type type, String methodName)
+        //{
+        //    return type.GetTypeInfo().GetDeclaredMethod(methodName);
+        //}
 #endif
 
 #if SL5 || NETFX_CORE || PCL

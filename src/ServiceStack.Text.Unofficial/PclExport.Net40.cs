@@ -1592,7 +1592,8 @@ namespace ServiceStack.Text.FastMember
         }
         private static void WriteSetter(ILGenerator il, Type type, PropertyInfo[] props, FieldInfo[] fields, bool isStatic)
         {
-            if (type.IsValueType)
+            var isValueType = type.IsValueType();
+            if (isValueType)
             {
                 il.Emit(OpCodes.Ldstr, "Write is not supported for structs");
                 il.Emit(OpCodes.Newobj, typeof(NotSupportedException).GetConstructor(new Type[] { typeof(string) }));
@@ -1603,7 +1604,7 @@ namespace ServiceStack.Text.FastMember
                 OpCode propName = isStatic ? OpCodes.Ldarg_1 : OpCodes.Ldarg_2,
                        target = isStatic ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1,
                        value = isStatic ? OpCodes.Ldarg_2 : OpCodes.Ldarg_3;
-                LocalBuilder loc = type.IsValueType ? il.DeclareLocal(type) : null;
+                LocalBuilder loc = isValueType ? il.DeclareLocal(type) : null;
                 foreach (PropertyInfo prop in props)
                 {
                     if (prop.GetIndexParameters().Length != 0 || !prop.CanWrite) continue;
@@ -1620,7 +1621,7 @@ namespace ServiceStack.Text.FastMember
                     Cast(il, type, loc);
                     il.Emit(value);
                     Cast(il, prop.PropertyType, null);
-                    il.EmitCall(type.IsValueType ? OpCodes.Call : OpCodes.Callvirt, setFn, null);
+                    il.EmitCall(isValueType ? OpCodes.Call : OpCodes.Callvirt, setFn, null);
                     il.Emit(OpCodes.Ret);
                     // not match:
                     il.MarkLabel(next);
@@ -1647,6 +1648,7 @@ namespace ServiceStack.Text.FastMember
                 il.Emit(OpCodes.Throw);
             }
         }
+
         private static readonly MethodInfo strinqEquals = typeof(string).GetMethod("op_Equality", new Type[] { typeof(string), typeof(string) });
 
         sealed class DelegateAccessor : TypeAccessor

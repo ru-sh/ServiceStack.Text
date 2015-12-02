@@ -76,8 +76,11 @@ namespace ServiceStack
             var type = Type.GetType(typeName);
             if (type == null)
                 return false;
-
+#if NETFX_CORE
+            var mi = type.GetMethod("Configure", new Type[0]);
+#else
             var mi = type.GetMethod("Configure");
+#endif
             if (mi != null)
             {
                 mi.Invoke(null, new object[0]);

@@ -1,4 +1,4 @@
-﻿#if (NETFX_CORE || WP)
+﻿#if (WP)
 //
 // https://github.com/ServiceStack/ServiceStack.Text
 // ServiceStack.Text: .NET C# POCO JSON, JSV and CSV Text Serializers.
